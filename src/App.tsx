@@ -16,6 +16,11 @@ function App() {
 
   useEffect(() => {
     socket.emit('getInitialValues', handleServerResponse)
+    socket.on('updateCounter', handleServerResponse)
+
+    return () => {
+      socket.off('updateCounter')
+    }
   }, [])
 
   const handleClick = () => {
