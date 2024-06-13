@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.button {
+  transition: all 50ms ease-in;
+}
+
+.button:active {
+  transform: scale(0.95);
+  filter: brightness(1.05);
+}
+
+.lato-regular {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
