@@ -15,16 +15,12 @@ function App() {
   }
 
   useEffect(() => {
-    socket.on('updateCounter', handleServerResponse)
-
-    return () => {
-      socket.removeListener('updateCounter')
-    }
+    socket.emit('getInitialValues', handleServerResponse)
   }, [])
 
   const handleClick = () => {
     setCount(p => p + 1) // Optimistic update
-    socket.emit('click')
+    socket.emit('click', handleServerResponse)
 
     userClickedCount.current++
 
