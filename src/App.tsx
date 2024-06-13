@@ -8,10 +8,30 @@ function App() {
   const [transformStyle, setTransformStyle] = useState<CSSProperties>({ transform: 'translate(0,0)' })
 
   const userClickedCount = useRef(0)
+  const soundRef = useRef<HTMLAudioElement>(null)
 
   const handleServerResponse = (count: number, activeUsers: number) => {
-    setCount(count)
+    setCount(prev => {
+      if (count > prev) {
+        const difference = count - prev
+
+        for (let i = 0; i < difference; i++) {
+          playPopSound()
+        }
+      }
+
+      return count
+    })
     setActiveUsers(activeUsers)
+  }
+
+  const playPopSound = () => {
+    const audio = soundRef.current
+
+    if (audio) {
+      audio.currentTime = 0
+      audio.play()
+    }
   }
 
   useEffect(() => {
@@ -28,6 +48,8 @@ function App() {
     socket.emit('click', handleServerResponse)
 
     userClickedCount.current++
+
+    playPopSound()
 
     if (userClickedCount.current > 500 && Math.random() * 100 < 10) {
       const randomX = Math.random() * 200 - 100
@@ -54,6 +76,7 @@ function App() {
         position: 'relative',
         zIndex: 10,
       }}>
+      <audio ref={soundRef} src='/pop.ogg' />
       <div />
 
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 32, margin: '0 16px 0 16px' }}>
