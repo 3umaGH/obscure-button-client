@@ -16,7 +16,12 @@ function App() {
         const difference = count - prev
 
         for (let i = 0; i < difference; i++) {
-          playPopSound()
+          setTimeout(
+            () => {
+              playPopSound()
+            },
+            i * (Math.random() * 200)
+          )
         }
       }
 
