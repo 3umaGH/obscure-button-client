@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react'
 
-export const Button = ({ onClick, style }: { onClick: () => void; style: CSSProperties }) => {
+export const Button = ({ onClick, style }: { onClick: () => void; style?: CSSProperties }) => {
   return (
     <div
       className='button'

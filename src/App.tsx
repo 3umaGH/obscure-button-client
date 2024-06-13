@@ -32,8 +32,6 @@ function App() {
       const randomX = Math.random() * 200 - 100
       const randomY = Math.random() * 300 - 150
 
-      console.log(randomX, randomY)
-
       setTransformStyle({ transform: `translate(${randomX}%,${randomY}%)` })
     }
   }
@@ -51,15 +49,24 @@ function App() {
         backgroundColor: '#f7f7f7',
         userSelect: 'none',
         overflow: 'hidden',
+
+        position: 'relative',
+        zIndex: 10,
       }}>
       <div />
 
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 32, margin: '0 16px 0 16px' }}>
         <p style={{ fontSize: '1.75rem', fontWeight: 400, textAlign: 'center' }}>
           See nupp oli vajutatud{' '}
-          <span style={{ color: '#006EC8', fontWeight: 700 }}>{currentCount.toLocaleString()}</span> korda.
+          <span style={{ color: currentCount % 100 === 0 ? 'red' : '#006EC8', fontWeight: 700 }}>
+            {currentCount.toLocaleString()}
+          </span>{' '}
+          korda.
         </p>
-        <Button onClick={handleClick} style={transformStyle} />
+
+        <div style={{ ...transformStyle, position: 'relative', zIndex: 400 }}>
+          <Button onClick={handleClick} style={{ zIndex: 122, position: 'relative' }} />
+        </div>
 
         <p style={{ fontSize: '1.25rem', fontWeight: 400, textAlign: 'center' }}>
           Siin on praegu <span style={{ color: '#006EC8', fontWeight: 700 }}>{activeUsers.toLocaleString()}</span>{' '}
