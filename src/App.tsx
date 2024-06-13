@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useRef, useState } from 'react'
+import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from './components/Button'
 import { socket } from './socket/socket'
 
@@ -10,28 +10,32 @@ function App() {
   const userClickedCount = useRef(0)
   const soundRef = useRef<HTMLAudioElement>(null)
 
-  const handleServerResponse = (count: number, activeUsers: number) => {
+  const updateValues = useCallback((count: number, activeUsers: number) => {
+    setCount(count)
+    setActiveUsers(activeUsers)
+  }, [])
+
+  const handleServerResponse = useCallback((count: number, activeUsers: number) => {
     setCount(prev => {
       if (count > prev) {
         const difference = count - prev
 
-        for (let i = 0; i < difference; i++) {
-          setTimeout(
-            () => {
-              playPopSound()
-            },
-            i * (Math.random() * 200)
-          )
+        for (let i = 0; i <= difference - 1; i++) {
+          setTimeout(() => {
+            playPopSound()
+          }, Math.random() * 900)
         }
       }
 
       return count
     })
     setActiveUsers(activeUsers)
-  }
+  }, [])
 
   const playPopSound = () => {
     const audio = soundRef.current
+
+    console.log('pop')
 
     if (audio) {
       audio.currentTime = 0
@@ -40,17 +44,17 @@ function App() {
   }
 
   useEffect(() => {
-    socket.emit('getInitialValues', handleServerResponse)
+    socket.emit('getInitialValues', updateValues)
     socket.on('updateCounter', handleServerResponse)
 
     return () => {
       socket.off('updateCounter')
     }
-  }, [])
+  }, [handleServerResponse, updateValues])
 
   const handleClick = () => {
     setCount(p => p + 1) // Optimistic update
-    socket.emit('click', handleServerResponse)
+    socket.emit('click', updateValues)
 
     userClickedCount.current++
 
