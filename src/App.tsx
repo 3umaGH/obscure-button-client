@@ -1,11 +1,13 @@
 import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from './components/Button'
 import { socket } from './socket/socket'
+import { SoundButton } from './components/SoundButton'
 
 function App() {
   const [currentCount, setCount] = useState(0)
   const [activeUsers, setActiveUsers] = useState(0)
   const [transformStyle, setTransformStyle] = useState<CSSProperties>({ transform: 'translate(0,0)' })
+  const [isMuted, setMuted] = useState(false)
 
   const userClickedCount = useRef(0)
   const soundRef = useRef<HTMLAudioElement>(null)
@@ -32,10 +34,12 @@ function App() {
     setActiveUsers(activeUsers)
   }, [])
 
+  const handleToggleMute = () => {
+    setMuted(p => !p)
+  }
+
   const playPopSound = () => {
     const audio = soundRef.current
-
-    console.log('pop')
 
     if (audio) {
       audio.currentTime = 0
@@ -85,7 +89,13 @@ function App() {
         position: 'relative',
         zIndex: 10,
       }}>
-      <audio ref={soundRef} src='/pop.ogg' />
+      <SoundButton
+        isMuted={isMuted}
+        onClick={handleToggleMute}
+        style={{ position: 'absolute', top: 15, right: 15, opacity: 0.65 }}
+      />
+
+      {!isMuted && <audio ref={soundRef} src='/pop.ogg' />}
       <div />
 
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 32, margin: '0 16px 0 16px' }}>
