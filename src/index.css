@@ -6,6 +6,17 @@
 .button {
   transition: all 50ms ease-in;
   cursor: pointer;
+
+  /* Disable touch callout (iOS Safari) and touch-hold (Android) */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Disable selection in iOS Safari */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight color in iOS */
+
+  /* Disable touch-hold (Android) */
+  touch-action: manipulation;
+
+  /* Disable long press context menu (Android) */
+  user-select: none;
 }
 
 .button:active {
