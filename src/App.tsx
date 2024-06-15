@@ -129,7 +129,7 @@ function App() {
 
         <div style={{ ...transformStyle, position: 'relative', zIndex: 400 }}>
           <Button onClick={handleClick} style={{ zIndex: 122, position: 'relative' }} />
-          <p style={{ textAlign: 'center', marginTop: 16, fontWeight: 600 }}>
+          <p style={{ textAlign: 'center', marginTop: 16, color: '#878787', fontSize: '0.85rem' }}>
             x {userClickedTotalCount.current.toLocaleString()}
           </p>
         </div>
