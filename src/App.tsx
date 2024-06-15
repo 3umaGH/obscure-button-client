@@ -100,7 +100,7 @@ function App() {
 
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 32, margin: '0 16px 0 16px' }}>
         <p style={{ fontSize: '1.75rem', fontWeight: 400, textAlign: 'center' }}>
-          See nupp oli vajutatud{' '}
+          Seda nuppu on vajutatud{' '}
           <span style={{ color: currentCount % 100 === 0 ? 'red' : '#006EC8', fontWeight: 700 }}>
             {currentCount.toLocaleString()}
           </span>{' '}
