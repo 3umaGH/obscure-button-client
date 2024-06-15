@@ -9,7 +9,9 @@ function App() {
   const [transformStyle, setTransformStyle] = useState<CSSProperties>({ transform: 'translate(0,0)' })
   const [isMuted, setMuted] = useState(false)
 
-  const userClickedCount = useRef(0)
+  const userClickedTotalCount = useRef(0)
+  const userClickedSessionCount = useRef(0)
+
   const soundRef = useRef<HTMLAudioElement>(null)
 
   const updateValues = useCallback((count: number, activeUsers: number) => {
@@ -51,8 +53,25 @@ function App() {
     socket.emit('getInitialValues', updateValues)
     socket.on('updateCounter', handleServerResponse)
 
+    const savedClicks = localStorage.getItem('clicks')
+
+    if (!savedClicks) {
+      localStorage.setItem('clicks', '0')
+    } else {
+      const toNumber = parseInt(savedClicks)
+
+      if (!isNaN(toNumber) && toNumber > 0) {
+        userClickedTotalCount.current = toNumber
+      }
+    }
+
+    const saveInterval = setInterval(() => {
+      localStorage.setItem('clicks', userClickedTotalCount.current.toString())
+    }, 1000)
+
     return () => {
       socket.off('updateCounter')
+      clearInterval(saveInterval)
     }
   }, [handleServerResponse, updateValues])
 
@@ -60,11 +79,12 @@ function App() {
     setCount(p => p + 1) // Optimistic update
     socket.emit('click', updateValues)
 
-    userClickedCount.current++
+    userClickedSessionCount.current++
+    userClickedTotalCount.current++
 
     playPopSound()
 
-    if (userClickedCount.current > 500 && Math.random() * 100 < 10) {
+    if (userClickedSessionCount.current > 500 && Math.random() * 100 < 10) {
       const randomX = Math.random() * 200 - 100
       const randomY = Math.random() * 300 - 150
 
@@ -109,6 +129,9 @@ function App() {
 
         <div style={{ ...transformStyle, position: 'relative', zIndex: 400 }}>
           <Button onClick={handleClick} style={{ zIndex: 122, position: 'relative' }} />
+          <p style={{ textAlign: 'center', marginTop: 16, fontWeight: 600 }}>
+            x {userClickedTotalCount.current.toLocaleString()}
+          </p>
         </div>
 
         <p style={{ fontSize: '1.25rem', fontWeight: 400, textAlign: 'center' }}>
