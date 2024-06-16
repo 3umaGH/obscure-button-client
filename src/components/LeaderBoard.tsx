@@ -46,7 +46,7 @@ export const LeaderBoard = ({
                   fontWeight: isLeaderClient ? 700 : 500,
                   color: isLeaderClient ? '#006EC8' : 'black',
                 }}>
-                {leader.clicks}
+                {leader.clicks.toLocaleString()}
               </p>
             )
           })}
@@ -55,17 +55,3 @@ export const LeaderBoard = ({
     </div>
   )
 }
-
-/* {leaders.map((leader, index) => {
-        const isLeaderClient = leader.id === clientID
-        return (
-          <p>
-            {`${index + 1})`}{' '}
-            <span style={{ color: isLeaderClient ? '#006EC8' : 'black' }}>
-              {leader.id.slice(0, 5).replace('-', '0').replace('_', '1').toLowerCase()}{' '}
-            </span>
-            <span style={{ margin: '0px 8px 0px 8px' }}> - </span> {leader.clicks}{' '}
-            <span style={{ fontWeight: 800 }}>{isLeaderClient ? '<- Sina' : ''}</span>
-          </p>
-        )
-      })}*/
