@@ -29,3 +29,19 @@
   font-weight: 400;
   font-style: normal;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid .container {
+  display: grid;
+  gap: 8px;
+
+}
+
+
+.grid .item {
+  border-bottom: 1px solid #ccc;
+}

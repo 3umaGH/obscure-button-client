@@ -1,11 +1,18 @@
 import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from './components/Button'
-import { socket } from './socket/socket'
+import { LeaderBoard } from './components/LeaderBoard'
+import { LeaderboardButton } from './components/LeaderboardButton'
 import { SoundButton } from './components/SoundButton'
+import { socket } from './socket/socket'
+import { LeaderUser } from './types/socket'
 
 function App() {
   const [currentCount, setCount] = useState(0)
   const [activeUsers, setActiveUsers] = useState(0)
+
+  const [isLeadersVisible, setLeadersVisible] = useState(false)
+  const [leaders, setLeaders] = useState<LeaderUser[]>([])
+
   const [transformStyle, setTransformStyle] = useState<CSSProperties>({ transform: 'translate(0,0)' })
   const [isMuted, setMuted] = useState(false)
 
@@ -18,6 +25,14 @@ function App() {
     setCount(count)
     setActiveUsers(activeUsers)
   }, [])
+
+  const handleSetInitialValues = useCallback(
+    (count: number, activeUsers: number, leaderboard: LeaderUser[]) => {
+      updateValues(count, activeUsers)
+      setLeaders(leaderboard)
+    },
+    [updateValues]
+  )
 
   const handleServerResponse = useCallback((count: number, activeUsers: number) => {
     setCount(prev => {
@@ -40,6 +55,10 @@ function App() {
     setMuted(p => !p)
   }
 
+  const handleToggleLeaders = () => {
+    setLeadersVisible(p => !p)
+  }
+
   const playPopSound = () => {
     const audio = soundRef.current
 
@@ -50,8 +69,9 @@ function App() {
   }
 
   useEffect(() => {
-    socket.emit('getInitialValues', updateValues)
+    socket.emit('getInitialValues', handleSetInitialValues)
     socket.on('updateCounter', handleServerResponse)
+    socket.on('updateLeaders', setLeaders)
 
     const savedClicks = localStorage.getItem('clicks')
 
@@ -71,9 +91,10 @@ function App() {
 
     return () => {
       socket.off('updateCounter')
+      socket.off('updateLeaders')
       clearInterval(saveInterval)
     }
-  }, [handleServerResponse, updateValues])
+  }, [handleServerResponse, handleSetInitialValues, updateValues])
 
   const handleClick = () => {
     setCount(p => p + 1) // Optimistic update
@@ -86,7 +107,7 @@ function App() {
 
     if (userClickedSessionCount.current > 500 && Math.random() * 100 < 10) {
       const randomX = Math.random() * 200 - 100
-      const randomY = Math.random() * 300 - 150
+      const randomY = Math.random() * 300 - 100
 
       setTransformStyle({ transform: `translate(${randomX}%,${randomY}%)` })
     }
@@ -104,7 +125,7 @@ function App() {
         alignItems: 'center',
         backgroundColor: '#f7f7f7',
         userSelect: 'none',
-        overflow: 'hidden',
+        overflow: 'auto',
 
         position: 'relative',
         zIndex: 10,
@@ -115,10 +136,17 @@ function App() {
         style={{ position: 'absolute', top: 15, right: 15, opacity: 0.65 }}
       />
 
+      <LeaderboardButton
+        onClick={handleToggleLeaders}
+        style={{ position: 'absolute', top: 55, right: 15, opacity: 0.55 }}
+      />
+
       {!isMuted && <audio ref={soundRef} src='/pop.ogg' />}
+
       <div />
 
-      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 32, margin: '0 16px 0 16px' }}>
+      <div
+        style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: 32, margin: '32px 48px 0 48px' }}>
         <p style={{ fontSize: '1.75rem', fontWeight: 400, textAlign: 'center' }}>
           Seda nuppu on vajutatud{' '}
           <span style={{ color: currentCount % 100 === 0 ? 'red' : '#006EC8', fontWeight: 700 }}>
@@ -139,6 +167,10 @@ function App() {
           {activeUsers === 1 ? 'inimene' : 'inimest'} {':)'}
         </p>
       </div>
+
+      {isLeadersVisible && (
+        <LeaderBoard leaders={leaders} clientID={socket.id} style={{ margin: '32px 0px 32px 0px' }} />
+      )}
 
       <div style={{ justifySelf: 'end', margin: '10px', fontSize: '0.85rem', color: '#878787' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
