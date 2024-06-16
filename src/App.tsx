@@ -131,7 +131,7 @@ function App() {
         position: 'relative',
         zIndex: 10,
       }}>
-      <Helmet>
+      <Helmet defer={false}>
         <title>Mõttetu Nupp - {currentCount.toLocaleString()}</title>
       </Helmet>
 
