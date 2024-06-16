@@ -5,6 +5,7 @@ import { LeaderboardButton } from './components/LeaderboardButton'
 import { SoundButton } from './components/SoundButton'
 import { socket } from './socket/socket'
 import { LeaderUser } from './types/socket'
+import { Helmet } from 'react-helmet'
 
 function App() {
   const [currentCount, setCount] = useState(0)
@@ -130,6 +131,10 @@ function App() {
         position: 'relative',
         zIndex: 10,
       }}>
+      <Helmet>
+        <title>Mõttetu Nupp - {currentCount.toLocaleString()}</title>
+      </Helmet>
+
       <SoundButton
         isMuted={isMuted}
         onClick={handleToggleMute}
