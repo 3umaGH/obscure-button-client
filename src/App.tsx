@@ -105,7 +105,7 @@ function App() {
 
     playPopSound()
 
-    if (userClickedSessionCount.current > 500 && Math.random() * 100 < 10) {
+    if (userClickedSessionCount.current > 5000 && Math.random() * 100 < 10) {
       const randomX = Math.random() * 200 - 100
       const randomY = Math.random() * 300 - 100
 
