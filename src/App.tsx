@@ -7,6 +7,8 @@ import { socket } from './socket/socket'
 import { LeaderUser } from './types/socket'
 import { Helmet } from 'react-helmet'
 
+const MAX_SOUND_INSTANCES = 100
+
 function App() {
   const [currentCount, setCount] = useState(0)
   const [activeUsers, setActiveUsers] = useState(0)
@@ -38,7 +40,7 @@ function App() {
   const handleServerResponse = useCallback((count: number, activeUsers: number) => {
     setCount(prev => {
       if (count > prev) {
-        const difference = count - prev
+        const difference = count - prev > MAX_SOUND_INSTANCES ? MAX_SOUND_INSTANCES : count - prev
 
         for (let i = 0; i <= difference - 1; i++) {
           setTimeout(() => {
