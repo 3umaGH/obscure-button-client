@@ -10,6 +10,10 @@ export const LeaderBoard = ({
   clientID: string | undefined
   style?: CSSProperties
 }) => {
+  const formatLeaderID = (id: string) => {
+    return id.slice(0, 4).toUpperCase().replace('_', 'A').replace('-', 'B')
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', ...style }}>
       <p style={{ textAlign: 'center', marginBottom: 16, fontSize: '1.15rem', color: '#878787' }}>Top 10:</p>
@@ -17,9 +21,7 @@ export const LeaderBoard = ({
         <div className='container'>
           {leaders.map((leader, index) => {
             const isLeaderClient = leader.id === clientID
-            const leaderID = isLeaderClient
-              ? 'SINA'
-              : leader.id.slice(0, 4).toUpperCase().replace('_', 'A').replace('-', 'B')
+            const leaderID = isLeaderClient ? `SINA (${formatLeaderID(leader.id)}) ` : formatLeaderID(leader.id)
 
             return (
               <p
