@@ -45,7 +45,7 @@ function App() {
         for (let i = 0; i <= difference - 1; i++) {
           setTimeout(() => {
             playPopSound()
-          }, Math.random() * 900)
+          }, Math.random() * 500)
         }
       }
 
