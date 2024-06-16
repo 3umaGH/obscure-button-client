@@ -135,6 +135,20 @@ function App() {
         <title>Mõttetu Nupp - {currentCount.toLocaleString()}</title>
       </Helmet>
 
+      {!socket.connected && (
+        <div
+          style={{
+            backgroundColor: 'red',
+            padding: 14,
+            color: 'white',
+            borderRadius: 8,
+            position: 'absolute',
+            top: 50,
+          }}>
+          Puudub ühendus serveriga
+        </div>
+      )}
+
       <SoundButton
         isMuted={isMuted}
         onClick={handleToggleMute}
